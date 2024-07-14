@@ -7,21 +7,23 @@
 
 import Foundation
 
-struct Theme<CardContent> {
+struct Theme<CardContent, ThemeColor>: Identifiable {
     private(set) var name: String
-    private(set) var color: String
+    private(set) var color: ThemeColor
     private(set) var numberOfPairs: Int
     
-    private var contentSet: Array<CardContent>
+    var id = UUID()
     
-    init(name: String, color: String, numberOfPairs: Int, contentSet: [CardContent]) {
+    var contentSet: Array<CardContent>
+    
+    init(name: String, color: ThemeColor, numberOfPairs: Int, contentSet: [CardContent]) {
         self.name = name
         self.color = color
         self.numberOfPairs = min(numberOfPairs, contentSet.count)
         self.contentSet = contentSet
     }
     
-    init(name: String, color: String, contentSet: [CardContent], randomNumberOfPairs: Bool = false) {
+    init(name: String, color: ThemeColor, contentSet: [CardContent], randomNumberOfPairs: Bool = false) {
         self.name = name
         self.color = color
         self.numberOfPairs = randomNumberOfPairs ? Int.random(in: 2..<contentSet.count) : contentSet.count

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		827F846B2C1A1CC100B12F77 /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827F846A2C1A1CC100B12F77 /* Cardify.swift */; };
+		82ABE47C2C4309A30067C6B2 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ABE47B2C4309A30067C6B2 /* ThemeStore.swift */; };
+		82ABE47E2C43104B0067C6B2 /* ThemeChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ABE47D2C43104B0067C6B2 /* ThemeChooser.swift */; };
 		82B127CB2A02D3930082F303 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B127CA2A02D3930082F303 /* AspectVGrid.swift */; };
 		82B127CD2A02EBE90082F303 /* Pie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B127CC2A02EBE90082F303 /* Pie.swift */; };
 		82C767B329F61CF000D7CDF8 /* MemorizeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C767B229F61CF000D7CDF8 /* MemorizeApp.swift */; };
@@ -21,6 +23,8 @@
 
 /* Begin PBXFileReference section */
 		827F846A2C1A1CC100B12F77 /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
+		82ABE47B2C4309A30067C6B2 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+		82ABE47D2C43104B0067C6B2 /* ThemeChooser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeChooser.swift; sourceTree = "<group>"; };
 		82B127CA2A02D3930082F303 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		82B127CC2A02EBE90082F303 /* Pie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pie.swift; sourceTree = "<group>"; };
 		82C767AF29F61CF000D7CDF8 /* Memorize.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memorize.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +75,8 @@
 				82C767C229FA0FCD00D7CDF8 /* MemoryGame.swift */,
 				82B127CC2A02EBE90082F303 /* Pie.swift */,
 				82C767CA29FDADBC00D7CDF8 /* Theme.swift */,
+				82ABE47D2C43104B0067C6B2 /* ThemeChooser.swift */,
+				82ABE47B2C4309A30067C6B2 /* ThemeStore.swift */,
 				82C767B629F61CF200D7CDF8 /* Assets.xcassets */,
 				82C767B829F61CF200D7CDF8 /* Preview Content */,
 			);
@@ -113,7 +119,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					82C767AE29F61CF000D7CDF8 = {
 						CreatedOnToolsVersion = 14.3;
@@ -162,7 +168,9 @@
 				82C767CB29FDADBC00D7CDF8 /* Theme.swift in Sources */,
 				82B127CD2A02EBE90082F303 /* Pie.swift in Sources */,
 				82C767B329F61CF000D7CDF8 /* MemorizeApp.swift in Sources */,
+				82ABE47C2C4309A30067C6B2 /* ThemeStore.swift in Sources */,
 				82C767C529FA125500D7CDF8 /* EmojiMemoryGame.swift in Sources */,
+				82ABE47E2C43104B0067C6B2 /* ThemeChooser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,6 +213,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -265,6 +274,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

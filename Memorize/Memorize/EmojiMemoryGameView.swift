@@ -13,7 +13,7 @@ struct EmojiMemoryGameView: View {
     @Namespace private var dealingNamespace
     
     var body: some View {
-        VStack {
+        VStack() {
             titleBar
             ZStack(alignment: .bottom) {
                 gameBody
@@ -32,6 +32,7 @@ struct EmojiMemoryGameView: View {
             Text("Score \(game.score)")
         }
         .foregroundColor(game.color)
+        .font(.title)
     } // End titleBar
     
     @State private var dealt = Set<Int>()
@@ -169,7 +170,8 @@ struct CardView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        let game = EmojiMemoryGame()
+        let store = ThemeStore(named: "Preview")
+        let game = EmojiMemoryGame(theme: store.themes[Int.random(in: 0..<store.themes.count)])
         
         EmojiMemoryGameView(game: game)
     }

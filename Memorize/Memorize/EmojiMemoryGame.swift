@@ -10,41 +10,15 @@ import SwiftUI
 class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
     
-    private static var themes = [
-        Theme(name: "Animals",
-              color: "Green",
-              numberOfPairs: 4,
-              contentSet: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐻‍❄️","🐨","🐯","🦁","🐮","🐷","🐽","🐸","🐵","🐔","🐧","🐦","🐤","🐥","🪿","🦆","🐦‍⬛","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🫎"]),
-        Theme(name: "Halloween",
-              color: "Orange",
-              numberOfPairs: 8,
-              contentSet: ["🎃","😈","👹","👻","💀","😺","👽","🧟‍♀️","🧛","🧌","🧙‍♂️"]),
-        Theme(name: "Vehicles",
-              color: "Red",
-              numberOfPairs: 10,
-              contentSet: ["🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🛻","🚚","🚛","🚜","✈️","🚀","🚁"]),
-        Theme(name: "Sports",
-              color: "Blue",
-              numberOfPairs: 14,
-              contentSet: ["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉","🥏","🎱","🪀","🏓","🥊","🥌"]),
-        Theme(name: "Food",
-              color: "Yellow",
-              contentSet: ["🍏","🍎","🍐","🍊","🍋","🥑","🍌","🍉","🍇","🍓","🫐","🍒","🍑","🥝","🥥","🌮","🍗","🍔","🥨","🌶️","🍿","🍕","🌽"],
-              randomNumberOfPairs: true),
-        Theme(name: "Plants",
-              color: "Violet",
-              contentSet: ["🌵","🌲","🌳","🌴","🌱","🌿","☘️","🍀","🪴","🍄","🌹","🥀","🌺","🌻","🌼"])
-    ]
-    
     @Published private(set) var model: MemoryGame<String>
-    private var theme: Theme<String>
+    private var theme: Theme<String, Color>
   
-    init() {
-        theme = EmojiMemoryGame.themes[Int.random(in: 0..<EmojiMemoryGame.themes.count)]
+    init(theme: Theme<String, Color>) {
+        self.theme = theme
         model = EmojiMemoryGame.createMemoryGame(theme: theme)
     }
     
-    private static func createMemoryGame(theme: Theme<String>) -> MemoryGame<String> {
+    private static func createMemoryGame(theme: Theme<String, Color>) -> MemoryGame<String> {
         let cardSet = theme.returnCardSet()
         
         return MemoryGame<String>(numberOfPairs: theme.numberOfPairs) { index in
@@ -65,22 +39,7 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     var color: Color {
-        switch theme.color {
-        case "Green":
-            return Color.green
-        case "Orange":
-            return Color.orange
-        case "Red":
-            return Color.red
-        case "Blue":
-            return Color.blue
-        case "Yellow":
-            return Color.yellow
-        case "Violet":
-            return Color.purple
-        default:
-            return Color.red
-        }
+        theme.color
     }
     
     // MARK: - Intents
@@ -94,7 +53,6 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     func newGame() {
-        theme = EmojiMemoryGame.themes[Int.random(in: 0..<EmojiMemoryGame.themes.count)]
         model = EmojiMemoryGame.createMemoryGame(theme: theme)
     }
 }
