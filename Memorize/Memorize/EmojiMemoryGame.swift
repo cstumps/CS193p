@@ -11,14 +11,14 @@ class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
     
     @Published private(set) var model: MemoryGame<String>
-    private var theme: Theme<String, Color>
+    private var theme: Theme<String>
   
-    init(theme: Theme<String, Color>) {
+    init(theme: Theme<String>) {
         self.theme = theme
         model = EmojiMemoryGame.createMemoryGame(theme: theme)
     }
     
-    private static func createMemoryGame(theme: Theme<String, Color>) -> MemoryGame<String> {
+    private static func createMemoryGame(theme: Theme<String>) -> MemoryGame<String> {
         let cardSet = theme.returnCardSet()
         
         return MemoryGame<String>(numberOfPairs: theme.numberOfPairs) { index in
@@ -39,7 +39,7 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     var color: Color {
-        theme.color
+        return Color(rgba: theme.color)
     }
     
     // MARK: - Intents

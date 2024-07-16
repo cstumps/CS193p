@@ -10,6 +10,8 @@
 		827F846B2C1A1CC100B12F77 /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 827F846A2C1A1CC100B12F77 /* Cardify.swift */; };
 		82ABE47C2C4309A30067C6B2 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ABE47B2C4309A30067C6B2 /* ThemeStore.swift */; };
 		82ABE47E2C43104B0067C6B2 /* ThemeChooser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ABE47D2C43104B0067C6B2 /* ThemeChooser.swift */; };
+		82ABE4802C442EA50067C6B2 /* ThemeEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ABE47F2C442EA50067C6B2 /* ThemeEditor.swift */; };
+		82ABE4822C44A8390067C6B2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ABE4812C44A8390067C6B2 /* Extensions.swift */; };
 		82B127CB2A02D3930082F303 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B127CA2A02D3930082F303 /* AspectVGrid.swift */; };
 		82B127CD2A02EBE90082F303 /* Pie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B127CC2A02EBE90082F303 /* Pie.swift */; };
 		82C767B329F61CF000D7CDF8 /* MemorizeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82C767B229F61CF000D7CDF8 /* MemorizeApp.swift */; };
@@ -25,6 +27,8 @@
 		827F846A2C1A1CC100B12F77 /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
 		82ABE47B2C4309A30067C6B2 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		82ABE47D2C43104B0067C6B2 /* ThemeChooser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeChooser.swift; sourceTree = "<group>"; };
+		82ABE47F2C442EA50067C6B2 /* ThemeEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeEditor.swift; sourceTree = "<group>"; };
+		82ABE4812C44A8390067C6B2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = SOURCE_ROOT; };
 		82B127CA2A02D3930082F303 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		82B127CC2A02EBE90082F303 /* Pie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pie.swift; sourceTree = "<group>"; };
 		82C767AF29F61CF000D7CDF8 /* Memorize.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Memorize.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +71,7 @@
 		82C767B129F61CF000D7CDF8 /* Memorize */ = {
 			isa = PBXGroup;
 			children = (
+				82ABE4812C44A8390067C6B2 /* Extensions.swift */,
 				82B127CA2A02D3930082F303 /* AspectVGrid.swift */,
 				827F846A2C1A1CC100B12F77 /* Cardify.swift */,
 				82C767C429FA125500D7CDF8 /* EmojiMemoryGame.swift */,
@@ -76,6 +81,7 @@
 				82B127CC2A02EBE90082F303 /* Pie.swift */,
 				82C767CA29FDADBC00D7CDF8 /* Theme.swift */,
 				82ABE47D2C43104B0067C6B2 /* ThemeChooser.swift */,
+				82ABE47F2C442EA50067C6B2 /* ThemeEditor.swift */,
 				82ABE47B2C4309A30067C6B2 /* ThemeStore.swift */,
 				82C767B629F61CF200D7CDF8 /* Assets.xcassets */,
 				82C767B829F61CF200D7CDF8 /* Preview Content */,
@@ -166,7 +172,9 @@
 				827F846B2C1A1CC100B12F77 /* Cardify.swift in Sources */,
 				82B127CB2A02D3930082F303 /* AspectVGrid.swift in Sources */,
 				82C767CB29FDADBC00D7CDF8 /* Theme.swift in Sources */,
+				82ABE4802C442EA50067C6B2 /* ThemeEditor.swift in Sources */,
 				82B127CD2A02EBE90082F303 /* Pie.swift in Sources */,
+				82ABE4822C44A8390067C6B2 /* Extensions.swift in Sources */,
 				82C767B329F61CF000D7CDF8 /* MemorizeApp.swift in Sources */,
 				82ABE47C2C4309A30067C6B2 /* ThemeStore.swift in Sources */,
 				82C767C529FA125500D7CDF8 /* EmojiMemoryGame.swift in Sources */,
@@ -228,7 +236,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -283,7 +291,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -301,6 +309,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Memorize/Preview Content\"";
+				DEVELOPMENT_TEAM = YW447YCDA9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -329,6 +338,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Memorize/Preview Content\"";
+				DEVELOPMENT_TEAM = YW447YCDA9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -10,7 +10,7 @@ import SwiftUI
 class ThemeStore: ObservableObject {
     let name: String
     
-    @Published var themes: [Theme<String, Color>] = ThemeStore.builtins
+    @Published var themes: [Theme<String>] = ThemeStore.builtins
 
     init(named name: String) {
         self.name = name
@@ -20,29 +20,29 @@ class ThemeStore: ObservableObject {
 //        }
     }
     
-    static var builtins: [Theme<String, Color>] { [
+    static var builtins: [Theme<String>] { [
         Theme(name: "Animals",
-              color: Color.green,
+              color: RGBA(color: .green),
               numberOfPairs: 4,
               contentSet: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐻‍❄️","🐨","🐯","🦁","🐮","🐷","🐽","🐸","🐵","🐔","🐧","🐦","🐤","🐥","🪿","🦆","🐦‍⬛","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🫎"]),
         Theme(name: "Halloween",
-              color: Color.orange,
+              color: RGBA(color: .orange),
               numberOfPairs: 8,
               contentSet: ["🎃","😈","👹","👻","💀","😺","👽","🧟‍♀️","🧛","🧌","🧙‍♂️"]),
         Theme(name: "Vehicles",
-              color: Color.red,
+              color: RGBA(color: .red),
               numberOfPairs: 10,
               contentSet: ["🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🛻","🚚","🚛","🚜","✈️","🚀","🚁"]),
         Theme(name: "Sports",
-              color: Color.blue,
+              color: RGBA(color: .blue),
               numberOfPairs: 14,
               contentSet: ["⚽️","🏀","🏈","⚾️","🥎","🎾","🏐","🏉","🥏","🎱","🪀","🏓","🥊","🥌"]),
         Theme(name: "Food",
-              color: Color.yellow,
+              color: RGBA(color: .yellow),
               contentSet: ["🍏","🍎","🍐","🍊","🍋","🥑","🍌","🍉","🍇","🍓","🫐","🍒","🍑","🥝","🥥","🌮","🍗","🍔","🥨","🌶️","🍿","🍕","🌽"],
               randomNumberOfPairs: true),
         Theme(name: "Plants",
-              color: Color.purple,
+              color: RGBA(color: .purple),
               contentSet: ["🌵","🌲","🌳","🌴","🌱","🌿","☘️","🍀","🪴","🍄","🌹","🥀","🌺","🌻","🌼"])
     ]}
 }
