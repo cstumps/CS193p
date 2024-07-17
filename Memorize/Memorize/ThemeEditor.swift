@@ -7,15 +7,17 @@
 
 import SwiftUI
 
-// View doesn't need to know about RGBA format.  Create convience functions in ViewModel to handle that for it.
-
-// Need to unique emoji list and maybe confirm a character is a emoji or not
+// The assignment suggests creating convience functions to hand rgba conversions for the view so it
+// doesn't need to be aware of that construct.  Based on how I implemented my views (poorly), this
+// seems to me to add additional complexity and so I will omit that part.
 
 struct ThemeEditor: View {
     @Binding var theme: Theme<String>
     
-    @State var themeColor: Color
-    @State var emojisToAdd: String = ""
+    @State private var themeColor: Color
+    @State private var emojisToAdd: String = ""
+    
+    @FocusState private var focused: Bool
     
     init(theme: Binding<Theme<String>>) {
         _theme = theme
@@ -25,48 +27,13 @@ struct ThemeEditor: View {
     var body: some View {
         Form {
             Section {
-                HStack {
-                    TextField("Name", text: $theme.name)
-                        .font(.title)
-                        .foregroundStyle(Color(rgba: theme.color))
-                    Spacer()
-                    ColorPicker("Colors", selection: $themeColor)
-                        .labelsHidden()
-                        .onChange(of: themeColor) { _, newColor in
-                            theme.color = RGBA(color: newColor)
-                        }
-                }
+                nameAndColor
             }
             Section {
                 VStack {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 40))]) {
-                        ForEach(theme.contentSet, id: \.self) { emoji in
-                            Text(emoji)
-                                .font(.title)
-                                .onTapGesture {
-                                    withAnimation {
-                                        theme.removeContent(emoji)
-                                        emojisToAdd.remove(emoji.first!)
-                                    }
-                                }
-                        }
-                    }
-                    TextField("Emojis", text: $emojisToAdd)
-                        .font(.headline)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.top)
-                        .onChange(of: emojisToAdd) { _, emojisToAdd in
-                            theme.addContent(Array(emojisToAdd)) { emoji in
-                                return emoji.first!.isEmoji
-                            }
-                        }
-                    Stepper {
-                        Text("\(theme.numberOfPairs) Pairs")
-                    } onIncrement: {
-                        theme.addPair()
-                    } onDecrement: {
-                        theme.removePair()
-                    }
+                    removeEmojis
+                    addEmojis
+                    changePairs
                 }
             } header: {
                 HStack {
@@ -75,6 +42,87 @@ struct ThemeEditor: View {
                     Text("Tap to include or exclude")
                 }
             }
+            if theme.removedContent.count != 0 {
+                Section {
+                    removedEmojis
+                } header: {
+                    Text("Previously removed Emojis, tap to re-add")
+                }
+            }
+        }
+        .onAppear {
+            if theme.name.isEmpty {
+                focused = true
+            }
+        }
+    }
+    
+    var nameAndColor: some View {
+        HStack {
+            TextField("Name", text: $theme.name)
+                .font(.title)
+                .foregroundStyle(Color(rgba: theme.color))
+                .focused($focused, equals: true)
+            Spacer()
+            ColorPicker("Colors", selection: $themeColor)
+                .labelsHidden()
+                .onChange(of: themeColor) { _, newColor in
+                    theme.color = RGBA(color: newColor)
+                }
+        }
+    }
+    
+    var removeEmojis: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 40))]) {
+            ForEach(theme.contentSet, id: \.self) { emoji in
+                Text(emoji)
+                    .font(.title)
+                    .onTapGesture {
+                        withAnimation {
+                            theme.removeContent(emoji)
+                        }
+                    }
+            }
+        }
+    }
+    
+    var removedEmojis: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 40))]) {
+            ForEach(theme.removedContent, id: \.self) { emoji in
+                Text(emoji)
+                    .font(.title)
+                    .onTapGesture {
+                        withAnimation {
+                            theme.addContent(emoji)
+                        }
+                    }
+            }
+        }
+    }
+    
+    var addEmojis: some View {
+        TextField("Tap here to add Emojis", text: $emojisToAdd)
+            .tint(.clear)
+            .font(.headline)
+            .textFieldStyle(.roundedBorder)
+            .padding(.top)
+            .onChange(of: emojisToAdd) { _, newEmoji in
+                if let emoji = newEmoji.first {
+                    if emoji.isEmoji && !theme.contentSet.contains(newEmoji) {
+                        theme.addContent(newEmoji)
+                    }
+                }
+                emojisToAdd = ""
+            }
+    }
+    
+    var changePairs: some View {
+        Stepper {
+            Text("\(theme.numberOfPairs) Pairs")
+        } onIncrement: {
+            theme.addPair()
+        } onDecrement: {
+            theme.removePair()
         }
     }
 }
@@ -83,16 +131,3 @@ struct ThemeEditor: View {
     @State var theme = ThemeStore(named: "Preview").themes.first!
     return ThemeEditor(theme: $theme)
 }
-//struct ThemeEditor_Previews: PreviewProvider {
-//    struct Preview: View {
-//        @State private var theme = ThemeStore(named: "Preview").themes.first!
-//        
-//        var body: some View {
-//            ThemeEditor(theme: $theme)
-//        }
-//    }
-//    
-//    static var previews: some View {
-//        Preview()
-//    }
-//}

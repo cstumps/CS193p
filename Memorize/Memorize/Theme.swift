@@ -7,12 +7,14 @@
 
 import Foundation
 
-struct Theme<CardContent>: Identifiable, Hashable where CardContent: Hashable {
+struct Theme<CardContent>: Identifiable, Codable, Hashable where CardContent: Hashable,
+                                                                 CardContent: Codable {
     var name: String
     var color: RGBA
     var id = UUID()
     
     private(set) var contentSet: Array<CardContent>
+    private(set) var removedContent: Array<CardContent>
     private(set) var numberOfPairs: Int
     
     init(name: String, color: RGBA, numberOfPairs: Int, contentSet: [CardContent]) {
@@ -20,6 +22,7 @@ struct Theme<CardContent>: Identifiable, Hashable where CardContent: Hashable {
         self.color = color
         self.numberOfPairs = min(numberOfPairs, contentSet.count)
         self.contentSet = contentSet
+        self.removedContent = []
     }
     
     init(name: String, color: RGBA, contentSet: [CardContent], randomNumberOfPairs: Bool = false) {
@@ -27,6 +30,7 @@ struct Theme<CardContent>: Identifiable, Hashable where CardContent: Hashable {
         self.color = color
         self.numberOfPairs = randomNumberOfPairs ? Int.random(in: 2..<contentSet.count) : contentSet.count
         self.contentSet = contentSet
+        self.removedContent = []
     }
     
     func returnCardSet() -> [CardContent] {
@@ -46,10 +50,18 @@ struct Theme<CardContent>: Identifiable, Hashable where CardContent: Hashable {
            let index = contentSet.firstIndex(where: { $0 == contentToRemove }) {
             contentSet.remove(at: index)
             numberOfPairs = min(contentSet.count, numberOfPairs)
+            
+            // Add content to the removed set
+            removedContent.append(contentToRemove)
         }
     }
     
-    mutating func addContent(_ contentToAdd: CardContent, isValid: (CardContent) -> Bool) {
-        contentSet = contentSet.append(contentToAdd).filter { isValid($0) }.unique()
+    mutating func addContent(_ contentToAdd: CardContent) {
+        contentSet.append(contentToAdd)
+        
+        // If this content is in the removed set, remove it when we make it active again
+        if let index = removedContent.firstIndex(where: { $0 == contentToAdd }) {
+            removedContent.remove(at: index)
+        }
     }
 }
