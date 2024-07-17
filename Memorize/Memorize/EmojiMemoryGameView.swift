@@ -42,7 +42,11 @@ struct EmojiMemoryGameView: View {
     }
     
     private func isUndealt(_ card: EmojiMemoryGame.Card) -> Bool {
-        !dealt.contains(card.id)
+        if game.dealt {
+            false
+        } else {
+            !dealt.contains(card.id)
+        }
     }
     
     private func dealAnimation(for card: EmojiMemoryGame.Card) -> Animation {
@@ -93,8 +97,11 @@ struct EmojiMemoryGameView: View {
             for card in game.cards {
                 withAnimation(dealAnimation(for: card)) {
                     deal(card)
+                } completion: {
+                    game.deal()
                 }
             }
+            
         }
     }
     

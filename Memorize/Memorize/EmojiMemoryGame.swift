@@ -11,7 +11,9 @@ class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
     
     @Published private(set) var model: MemoryGame<String>
+    
     private var theme: Theme<String>
+    private(set) var dealt: Bool = false
   
     init(theme: Theme<String>) {
         self.theme = theme
@@ -25,7 +27,7 @@ class EmojiMemoryGame: ObservableObject {
             cardSet[ index ]
         }
     }
-
+    
     var name: String {
         return theme.name
     }
@@ -54,5 +56,10 @@ class EmojiMemoryGame: ObservableObject {
     
     func newGame() {
         model = EmojiMemoryGame.createMemoryGame(theme: theme)
+        dealt = false
+    }
+    
+    func deal() {
+        dealt = true
     }
 }

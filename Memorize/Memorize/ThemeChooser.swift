@@ -7,17 +7,11 @@
 
 import SwiftUI
 
-/*
- I had implemented the dictionary to track running games for the extra credit however the dealing
- animation doesnt' work right with it.  Rather than disabling the animation, I commented out
- the game tracking.
- */
-
 struct ThemeChooser: View {
     @ObservedObject var store: ThemeStore
     
     @State private var selectedId: Theme<String>.ID?
-    //@State private var runningGames: Dictionary<Theme<String>.ID, EmojiMemoryGame> = [:]
+    @State private var runningGames: Dictionary<Theme<String>.ID, EmojiMemoryGame> = [:]
     
     var body: some View {
         NavigationStack {
@@ -27,6 +21,11 @@ struct ThemeChooser: View {
                 .sheet(item: $selectedId) { id in
                     if let index = store.themes.firstIndex(where: { $0.id == id }) {
                         ThemeEditor(theme: $store.themes[index])
+                            .onAppear {
+                                // If there is a running version of this theme already, kill it incase
+                                // the contents of the theme changes
+                                runningGames[id] = nil
+                            }
                     }
                 }
                 .navigationTitle("Themes")
@@ -76,21 +75,19 @@ struct ThemeChooser: View {
     @ViewBuilder
     private func startGame(withThemeId id: Theme<String>.ID) -> some View {
         if let index = store.themes.firstIndex(where: { $0.id == id }) {
-            EmojiMemoryGameView(game: EmojiMemoryGame(theme: store.themes[index]))
-                .navigationBarTitleDisplayMode(.inline)
             // If this game is already being played, return to it
-//            if let game = runningGames[id] {
-//                EmojiMemoryGameView(game: game)
-//                    .navigationBarTitleDisplayMode(.inline)
-//            } else {
-//                let game = EmojiMemoryGame(theme: store.themes[index])
-//                
-//                EmojiMemoryGameView(game: game)
-//                    .navigationBarTitleDisplayMode(.inline)
-//                    .onAppear() {
-//                        runningGames[id] = game
-//                    }
-//            }
+            if let game = runningGames[id] {
+                EmojiMemoryGameView(game: game)
+                    .navigationBarTitleDisplayMode(.inline)
+            } else {
+                let game = EmojiMemoryGame(theme: store.themes[index])
+                
+                EmojiMemoryGameView(game: game)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .onAppear() {
+                        runningGames[id] = game
+                    }
+            }
         }
     }
 }
