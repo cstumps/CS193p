@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct EmojiArtDocumentView: View {
+    @Environment(\.undoManager) var undoManager
+    
+    @StateObject var paletteStore = PaletteStore(named: "Shared")
+    
     typealias Emoji = EmojiArt.Emoji
     
     @ObservedObject var document: EmojiArtDocument
-    
-    private let emojis = "🍏🍎🍐🍊🍋🥑🍌🍉🍇🍓🫐🍒🍑🥝🥥🌮🍗🍔🥨🌶️🍿🍕🌽"
-    private let paletteEmojiSize: CGFloat = 40
+    @ScaledMetric var paletteEmojiSize: CGFloat = 40
     
     var body: some View {
         VStack(spacing: 0) {
@@ -23,22 +25,76 @@ struct EmojiArtDocumentView: View {
                 .padding(.horizontal)
                 .scrollIndicators(.hidden)
         }
+        .toolbar {
+            UndoButton()
+        }
+        .environmentObject(paletteStore)
     }
     
     private var documentBody: some View {
         GeometryReader { geometry in
             ZStack {
                 Color.white
+                if document.background.isFetching {
+                    ProgressView()
+                        .scaleEffect(2)
+                        .tint(.blue)
+                        .position(Emoji.Position.zero.in(geometry))
+                }
                 documentContents(in: geometry)
                     .scaleEffect(zoom * (selectedEmojis.isEmpty ? gestureZoom : 1))
                     .offset(pan + gesturePan)
             }
             .gesture(panGesture.simultaneously(with: zoomGesture))
+            .onTapGesture(count: 2) {
+                zoomToFit(document.bbox, in: geometry)
+            }
             .dropDestination(for: Sturldata.self) { sturldatas, location in
                 return drop(sturldatas, at: location, in: geometry)
             }
+            .onChange(of: document.background.failureReason) { _, reason in
+                showBackgroundFailureAlert = (reason != nil)
+            }
+            .onChange(of: document.background.uiImage) { _, uiImage in
+                zoomToFit(uiImage?.size, in: geometry)
+            }
+            .alert(
+                "Set Background",
+                isPresented: $showBackgroundFailureAlert,
+                presenting: document.background.failureReason,
+                actions: { reason in
+                    Button("Ok", role: .cancel) { }
+                },
+                message: { reason in
+                    Text(reason)
+                }
+            )
         }
     }
+    
+    private func zoomToFit(_ size: CGSize?, in geometry: GeometryProxy) {
+        if let size {
+            zoomToFit(CGRect(center: .zero, size: size), in: geometry)
+        }
+    }
+    
+    private func zoomToFit(_ rect: CGRect, in geometry: GeometryProxy) {
+        withAnimation {
+            if rect.size.width > 0, rect.size.height > 0,
+               geometry.size.width > 0, geometry.size.height > 0 {
+                let hZoom = geometry.size.width / rect.size.width
+                let vZoom = geometry.size.height / rect.size.height
+                
+                zoom = min(hZoom, vZoom)
+                pan = CGOffset(
+                    width: -rect.midX * zoom,
+                    height: -rect.midY * zoom
+                )
+            }
+        }
+    }
+    
+    @State private var showBackgroundFailureAlert = false
     
     @State private var zoom: CGFloat = 1
     @State private var pan: CGOffset = .zero
@@ -65,7 +121,7 @@ struct EmojiArtDocumentView: View {
                     zoom *= endingPinchScale
                 } else {
                     for emojiId in selectedEmojis {
-                        document.resize(emojiWithId: emojiId, by: endingPinchScale)
+                        document.resize(emojiWithId: emojiId, by: endingPinchScale, undoWoth: undoManager)
                     }
                 }
             }
@@ -92,29 +148,21 @@ struct EmojiArtDocumentView: View {
             .onEnded { value in
                 if selectedEmojis.contains(emoji.id) {
                     for emojiId in selectedEmojis {
-                        document.move(emojiWithId: emojiId, by: value.translation)
+                        document.move(emojiWithId: emojiId, by: value.translation, undoWoth: undoManager)
                     }
                 } else {
-                    document.move(emojiWithId: emoji.id, by: value.translation)
+                    document.move(emojiWithId: emoji.id, by: value.translation, undoWoth: undoManager)
                 }
             }
     }
     
     @ViewBuilder
     private func documentContents(in geometry: GeometryProxy) -> some View {
-        AsyncImage(url: document.background) { phase in
-            if let image = phase.image {
-                image
-            } else if let url = document.background {
-                if phase.error != nil {
-                    Text("\(url)")
-                } else {
-                    ProgressView()
-                }
-            }
+        if let uiImage = document.background.uiImage {
+            Image(uiImage: uiImage)
+                .onTapGesture { selectedEmojis.removeAll() }
+                .position(Emoji.Position.zero.in(geometry)) // Center background image in view
         }
-            .onTapGesture { selectedEmojis.removeAll() }
-            .position(Emoji.Position.zero.in(geometry)) // Center background image in view
         ForEach(document.emojis) { emoji in
             Text(emoji.string)
                 .font(emoji.font)
@@ -129,7 +177,7 @@ struct EmojiArtDocumentView: View {
                     }
                 }
                 .onLongPressGesture {
-                    document.deleteEmoji(emoji)
+                    document.deleteEmoji(emoji, undoWith: undoManager)
                     
                     if selectedEmojis.contains(emoji.id) {
                         selectedEmojis.remove(emoji.id)
@@ -147,12 +195,13 @@ struct EmojiArtDocumentView: View {
         for sturldata in sturldatas {
             switch sturldata {
             case .url(let url):
-                document.setBackground(url)
+                document.setBackground(url, undoWith: undoManager)
                 return true
             case .string(let emoji):
                 document.addEmoji(emoji, 
                                   at: emojiPosition(at: location, in: geometry),
-                                  size: paletteEmojiSize / zoom
+                                  size: paletteEmojiSize / zoom,
+                                  undoWith: undoManager
                 )
                 return true
             default:

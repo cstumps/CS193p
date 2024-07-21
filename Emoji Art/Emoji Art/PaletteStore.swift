@@ -75,6 +75,27 @@ class PaletteStore: ObservableObject, Identifiable {
                 palettes = [Palette(name: "Warning", emojis: "⚠️")]
             }
         }
+        
+        observer = NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] notification in
+                self?.objectWillChange.send()
+            }
+        // By adding [self] we ensure that 'self' will be captured on the heap. The problem is that even if we
+        // remove the window, it will not deinit.  We add 'weak' to it to turn self into an optional which will
+        // no longer put it in the heap.  May need to read about this in the documentation to understand this more
+        // likely need to reasearch how objects and more specifically closures are stored.
+    }
+    
+    @State private var observer: NSObjectProtocol?
+    
+    // Called when reference is leaving the heap, no one else is calling it any longer
+    deinit {
+        print("remove observer")
+        if let observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     @Published private var _cursorIndex = 0
